@@ -15,6 +15,11 @@ import Callback from './pages/callback';
 
 import UserHome from './pages/user/home';
 
+import AdminHome from './pages/admin/home';
+import AdminTicketRoom from './pages/admin/ticketRoom';
+
+import TicketRoom from './pages/ticketRoom';
+
 class SendToLogin extends React.Component {
   componentDidMount() {
     console.log('Redirecting you to login...');
@@ -50,7 +55,8 @@ class App extends React.Component {
             <Routes>
               <Route path="/about" element={<h1>HE</h1>} />
               <Route path="/users" element={<h1>HE</h1>} />
-              <Route path="/*" element={<h1>HE</h1>} />
+              <Route path="/ticket/:uuid" element={<AdminTicketRoom />} />
+              <Route path="/*" element={<AdminHome />} />
             </Routes>
           </Router>
         </div>
@@ -61,7 +67,7 @@ class App extends React.Component {
         <Router>
           <Routes>
             <Route path="/about" element={<h1>HE</h1>} />
-            <Route path="/users" element={<h1>HE</h1>} />
+            <Route path="/ticket/:uuid" element={<TicketRoom />} />
             <Route path="/*" element={<UserHome />} />
           </Routes>
         </Router>

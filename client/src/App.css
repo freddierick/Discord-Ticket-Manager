@@ -36,3 +36,69 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Chat containers */
+.message-container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+/* Darker chat container */
+.message-darker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+/* Clear floats */
+.message-container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Style images */
+.message-container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+/* Style the right image */
+.message-container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+/* Style time text */
+.message-time-right {
+  float: right;
+  color: #aaa;
+}
+
+/* Style time text */
+.message-time-left {
+  float: left;
+  color: #999;
+}
+
+.messages {
+  overflow-y: scroll;
+  height: 400px;
+  width: 100%;
+}
+
+.profile-picture {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+

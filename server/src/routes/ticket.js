@@ -1,11 +1,12 @@
 // Create a discord oauth2 login express route 
 const route = require('express').Router();
+const { WebSocketManager } = require('discord.js');
 const jwt = require('jsonwebtoken');
 
 const checkAuthentication = require('../jwtCheck');
 
 const rawRouteTicket = async (variables) => {
-    const {db, keys, isUserAMod, internalEvents} = variables;
+    const {db, keys, isUserAMod, internalEvents, discordClient} = variables;
 
     route.use(checkAuthentication(keys.public, false));
     
@@ -25,8 +26,8 @@ const rawRouteTicket = async (variables) => {
 
     route.get('/:UUID', async (req, res) => {
         const { UUID } = req.params;
-        const ticket = await db.getTicketByUUID(UUID);
-        if (!ticket.rows[0] || ticket.rows[0].owner != req.user.id) return res.status(404).json({ error: 'Ticket not found' });
+        const ticket = await db.getTicketById(UUID);
+        if (!ticket.rows[0] || (ticket.rows[0].owner != req.user.id || req.user.isMod)) return res.status(404).json({ error: 'Ticket not found' });
         res.json(ticket.rows[0]);
     });
 
@@ -36,27 +37,31 @@ const rawRouteTicket = async (variables) => {
         res.json(ticket.rows[0]);
     });
 
-    route.ws('/:UUID/ws', async (ws, req) => {
-        const { UUID } = req.params;
-        const ticket = await db.getTicketByUUID(UUID);
-        if (!(ticket.rows[0] && (ticket.rows[0].owner != req.user.id || req.user.isMod))) ws.close(4000, 'You are not allowed to access this ticket');
 
-        ws.on('message', async (message) => {
-            const { message: msg } = JSON.parse(message);
-            const { c, p } = JSON.parse(msg);
-            if (c == 'SEND_MESSAGE') internalEvents.emit('newMessage', { ticketID: UUID, payload: p, userID: req.user.id });
-            if (c == 'EDIT_MESSAGE') internalEvents.emit('editMessage', { ticketID: UUID, payload: p, userID: req.user.id });
-        });
+    route.get('/messages/:UUID/:page', async (req, res) => {
+        const { page, UUID } = req.params;
+        if (!page || !UUID) return res.status(400).json({ error: 'Missing required fields' });
+        
+        const messages = await db.getOrderedCommentsByCreatedAtPageNumber(UUID, page, 50);
 
-        internalEvents.on('dispatchRoomMessage', (data) => {
-            if (data.ticketID != UUID) return;
-            ws.send(JSON.stringify(data.payload));
-        });
-        internalEvents.on('dispatchGlobalMessage', (data) => {
-            ws.send(JSON.stringify(data.payload));
-        });
+        const arrayForUser = [];
+        for (let index = 0; index < messages.rows.length; index++) {
+            const element = messages.rows[index];
+            const author = await discordClient.getOrFetch(element.author);
 
+            arrayForUser.push({
+                id: element.ticketID,
+                content: element.comment,
+                timestamp: element.created_at,
+                author,
+                deleted: element.deleted,
+                edited: element.edited
+            });
+        };
+
+        res.json(arrayForUser);
     });
+
 
     return route;
 };

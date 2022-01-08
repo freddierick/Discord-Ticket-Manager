@@ -26,9 +26,9 @@ const instigate = async () => {
         getOpenTicketByOwner: owner => query('SELECT * FROM tickets WHERE owner = $1 AND state = $2', [owner, 'open']),
         getClosedTicketsByOwner: owner => query('SELECT * FROM tickets WHERE owner = $1 AND state = $2', [owner, 'closed']),
 
-        getCommentsByTicketId: id => query('SELECT * FROM comments WHERE ticketID = $1', [id]),
-        getOrderedCommentsByTicketId: id => query('SELECT * FROM comments WHERE ticketID = $1 ORDER BY created_at DSC', [id]),
-        getOrderedCommentsByCreatedAtPageNumber: (id, page, count = 10) => query('SELECT * FROM comments WHERE ticketID = $1 ORDER BY created_at DSC OFFSET $2 LIMIT $3', [id, page * count, count]),
+        getCommentsByTicketId: id => query('SELECT * FROM ticket_comments WHERE ticketID = $1', [id]),
+        getOrderedCommentsByTicketId: id => query('SELECT * FROM ticket_comments WHERE ticketID = $1 ORDER BY created_at DESC', [id]),
+        getOrderedCommentsByCreatedAtPageNumber: (id, page, count = 10) => query('SELECT * FROM ticket_comments WHERE ticketID = $1 ORDER BY created_at DESC OFFSET $2 LIMIT $3', [id, page * count, count]),
 
         createNewTicket: (owner, title) => query('INSERT INTO tickets (owner, name, state) VALUES ($1, $2, $3) RETURNING ticketID', [owner, title, 'open']),
         updateTicket: (id, title, description, state) => query('UPDATE tickets SET title = $1, description = $2, state = $3 WHERE ticketID = $4', [title, description, state, id]),
@@ -36,7 +36,9 @@ const instigate = async () => {
         closeTicketById: id => query('UPDATE tickets SET state = $1 WHERE ticketID = $2', ['closed', id]),
         closeTicketByOwner: owner => query('UPDATE tickets SET state = $1 WHERE owner = $2', ['closed', owner]),
 
-        createNewComment: (ticketId, author, comment) => query('INSERT INTO comments (ticketID, author, comment) VALUES ($1, $2, $3) RETURNING commentID', [ticketId, author, comment]),
+        createNewComment: (ticketId, author, comment) => query('INSERT INTO ticket_comments (ticketID, author, comment) VALUES ($1, $2, $3) RETURNING commentID, created_at', [ticketId, author, comment]),
+
+        updateTicketState: (id, state) => query('UPDATE tickets SET state = $1 WHERE ticketID = $2', [state, id]),
     };
 };
 

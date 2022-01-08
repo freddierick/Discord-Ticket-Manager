@@ -21,7 +21,7 @@ class Home extends React.Component {
         console.log("Home component mounted");
         const ticketData = await user.getTicket();
         if (ticketData.statusCode === 200) {
-            this.setState({ redirect: `/ticket/${ticketData.data.ticketid}` });
+            this.setState({ redirect: `/ticket/${ticketData.body.ticketid}` });
         } else if (ticketData.statusCode === 404) {
             this.setState({
                 loading: false,
@@ -34,7 +34,7 @@ class Home extends React.Component {
         const ticketName = document.getElementById('TicketName').value;
         console.log(ticketName, "TEST", JSON.stringify({title: ticketName}));
         const newTicketData = await user.createTicket(ticketName);
-        this.setState({ redirect: `/ticket/${newTicketData.ticketid}` });
+        this.setState({ redirect: `/ticket/${newTicketData.body.ticketid}` });
     };
     render() {
         if (this.state.redirect) 

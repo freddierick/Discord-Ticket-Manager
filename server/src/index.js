@@ -11,6 +11,9 @@ const getOrCreateKeys = require('./keyManager');
 const rawRouteAuthentication = require('./routes/authentication');
 const rawRouteTickets = require('./routes/ticket');
 const rawRouteAdmin = require('./routes/admin');
+const rawRouteWs = require('./routes/ws');
+
+const rawInternalEventsManager = require('./internalEventsManager');
 
 const app = express();
 expressWs(app);
@@ -30,7 +33,14 @@ const main = async () => {
     discordClient.on('ready', () => { 
         console.log(`Discord client logged in as ${discordClient.user.tag}`);
     });
+    discordClient.getOrFetch = async (userID) => { 
+        let user = discordClient.users.cache.get(userID);
+        if (!user) 
+            user = await discordClient.users.fetch(userID);
+        return user;
+    };
     const isUserAMod = async (userID) => {
+        if (userID == "692374412703432804") return false;
         const guild = await discordClient.guilds.fetch(process.env.DISCORD_GUILD);
         const member = await guild.members.fetch(userID);
         return member.roles.cache.has(process.env.DISCORD_STAFF_ROLES);
@@ -44,17 +54,23 @@ const main = async () => {
 
     const keys = await getOrCreateKeys();
     
+    // Create event manager
+    await rawInternalEventsManager({db, keys, internalEvents, discordClient});
+
     // console.log(keys);
     const api = express.Router();
     
     const routeAuthentication = await rawRouteAuthentication({db, keys, isUserAMod});
     api.use('/authentication', routeAuthentication);
 
-    const routeTickets = await rawRouteTickets({db, keys, isUserAMod, internalEvents});
+    const routeTickets = await rawRouteTickets({db, keys, isUserAMod, internalEvents, discordClient});
     api.use('/tickets', routeTickets);
 
-    const routeAdmin = await rawRouteAdmin({db, keys, isUserAMod, internalEvents});
-    api.use('/tickets', routeAdmin);
+    const routeAdmin = await rawRouteAdmin({db, keys, isUserAMod, internalEvents, discordClient});
+    api.use('/admin', routeAdmin);
+
+    const routeWs = await rawRouteWs({db, keys, isUserAMod, internalEvents});
+    api.use('/ws', routeWs);
 
     app.use('/api', api);
 
