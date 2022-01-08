@@ -27,7 +27,7 @@ const getOrCreateKeys = async () => {
         console.log('Fetching RSA keys');
         keys.public = await fs.readFileSync(__dirname + '/keyStore/public.pem', 'utf8');
         keys.private = await fs.readFileSync(__dirname + '/keyStore/private.key', 'utf8');
-        if (process.env.SETTING_NEW_KEYS_ON_REBOOT) {
+        if (process.env.SETTING_NEW_KEYS_ON_REBOOT == "true") {
             console.log('Setting new RSA keys rule: process.env.SETTING_NEW_KEYS_ON_REBOOT');
             const {publicKey, privateKey} = await generateKeyPair();
             keys.public = publicKey;

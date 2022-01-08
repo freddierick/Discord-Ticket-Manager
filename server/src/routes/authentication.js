@@ -33,8 +33,8 @@ const rawRouteAuthentication = async (variables) => {
             console.log(req.user);
             const isMod = await isUserAMod(req.user.id); 
             const token = jwt.sign({ id: req.user.id, isMod }, keys.private, { algorithm: 'RS256', expiresIn: '1h', issuer: 'Freddie' });
-
-            res.redirect(`/callback?jwt=${token}`);
+            
+            res.redirect(`${process.env.APP_URL || process.env.BASE_URL}/callback?jwt=${token}`);
     });
 
     return route;

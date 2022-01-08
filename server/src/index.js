@@ -3,7 +3,8 @@ const discord = require('discord.js');
 const express = require('express');
 const expressWs = require('express-ws');
 const Events = require('events');
-
+const cors = require('cors');
+const bodyParser = require('body-parser')
 const databaseInstigate = require('./database/interface');
 const getOrCreateKeys = require('./keyManager');
 
@@ -13,6 +14,13 @@ const rawRouteAdmin = require('./routes/admin');
 
 const app = express();
 expressWs(app);
+
+app.use(cors());
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(express.json());
 
 const main = async () => {
     const internalEvents = new Events();

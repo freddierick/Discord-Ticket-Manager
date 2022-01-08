@@ -30,7 +30,7 @@ const instigate = async () => {
         getOrderedCommentsByTicketId: id => query('SELECT * FROM comments WHERE ticketID = $1 ORDER BY created_at DSC', [id]),
         getOrderedCommentsByCreatedAtPageNumber: (id, page, count = 10) => query('SELECT * FROM comments WHERE ticketID = $1 ORDER BY created_at DSC OFFSET $2 LIMIT $3', [id, page * count, count]),
 
-        createNewTicket: (owner, title, description) => query('INSERT INTO tickets (owner, title, description, state) VALUES ($1, $2, $3, $4) RETURNING ticketID', [owner, title, description, 'open']),
+        createNewTicket: (owner, title) => query('INSERT INTO tickets (owner, name, state) VALUES ($1, $2, $3) RETURNING ticketID', [owner, title, 'open']),
         updateTicket: (id, title, description, state) => query('UPDATE tickets SET title = $1, description = $2, state = $3 WHERE ticketID = $4', [title, description, state, id]),
 
         closeTicketById: id => query('UPDATE tickets SET state = $1 WHERE ticketID = $2', ['closed', id]),
