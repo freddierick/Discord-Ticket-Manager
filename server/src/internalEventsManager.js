@@ -23,7 +23,7 @@ const internalEventsManager = async (variables) => {
         const author = await discordClient.getOrFetch(userID);
 
         console.log(messageDb);
-        
+
         const message = {
             id: messageDb.commentid,
             author,
@@ -35,7 +35,27 @@ const internalEventsManager = async (variables) => {
         };
 
         internalEvents.emit('dispatchRoomMessage', { ticketID, payload: message });
+        internalEvents.emit('newOrderRequest');
     });
+
+    internalEvents.on('newOrderRequest', async () => {
+        const tickets = await db.getOrderedTickets();
+        const arrayForUser = [];
+        for (let index = 0; index < tickets.rows.length; index++) {
+            const element = tickets.rows[index];
+            console.log(element)
+            const owner = await discordClient.getOrFetch(element.owner);
+
+            arrayForUser.push({
+                id: element.ticketid,
+                owner,
+                name: element.name,
+                created_at: element.created_at,
+            });
+        };
+        internalEvents.emit('newOrderResponse', arrayForUser);
+    });
+    
 };
 
 

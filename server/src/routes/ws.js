@@ -51,6 +51,19 @@ const rawRouteWs = async (variables) => {
 
     });
 
+    route.ws('/admin/home', async (ws, req) => {
+        // if (!req.user.isMod) ws.close(4000, 'You are not allowed to access this');
+        console.log('new Connection')
+        ws.on('message', async () => {
+            console.log("Nre message")
+            internalEvents.emit('newOrderRequest');
+        });
+
+        internalEvents.on('newOrderResponse', (data) => {
+            ws.send(JSON.stringify(data));
+        });
+
+    });
     return route;
 };
 

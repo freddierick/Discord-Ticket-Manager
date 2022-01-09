@@ -3,7 +3,7 @@ import {
     Navigate,
     Link
 } from "react-router-dom";
-import { admin } from '../../apiManager';
+import { admin, WS_API_URL } from '../../apiManager';
 
 import Table from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -19,11 +19,29 @@ class Home extends React.Component {
     };
 
     async componentDidMount() {
-        console.log("Home component mounted");
-        const ticketData = await admin.getTickets(0);
-        if (ticketData.statusCode === 200) {
-            console.log(ticketData, "TICKET DATA");
-            this.setState({ tickets: ticketData.body, loading: false });
+        // console.log("Home component mounted");
+        // const ticketData = await admin.getTickets(0);
+        // if (ticketData.statusCode === 200) {
+        //     console.log(ticketData, "TICKET DATA");
+        //     this.setState({ tickets: ticketData.body, loading: false });
+        // };
+
+        this.ws = new WebSocket(`ws://${WS_API_URL}/ws/admin/home?token=${localStorage.getItem('Authentication')}`);
+
+        this.ws.onopen = async () => { 
+            console.log("Connected to websocket");
+            this.ws.send('Requesting tickets');
+        };
+        
+
+        this.ws.onmessage = (data) => {
+            const message = JSON.parse(data.data);
+            this.setState({ tickets: message, loading: false });
+        };
+
+
+        this.ws.onclose = (data) => {
+            console.log("Disconnected from websocket", data);
         };
     };
 

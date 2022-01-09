@@ -39,9 +39,15 @@ const instigate = async () => {
         createNewComment: (ticketId, author, comment) => query('INSERT INTO ticket_comments (ticketID, author, comment) VALUES ($1, $2, $3) RETURNING commentID, created_at', [ticketId, author, comment]),
 
         updateTicketState: (id, state) => query('UPDATE tickets SET state = $1 WHERE ticketID = $2', [state, id]),
+
+        getOrderedTickets: () => query('SELECT MAX(ticket_comments.created_at) AS newest, tickets.ticketID, tickets.owner, tickets.owner FROM tickets LEFT JOIN ticket_comments ON tickets.ticketID = ticket_comments.ticketID GROUP BY tickets.ticketID ORDER BY newest DESC;', []),
     };
 };
-
+// 
+// LEFT JOIN ticket_comments
+// ON tickets.ticketID = ticket_comments.ticketID
+// GROUP BY tickets.ticketID
+// ORDER BY newest DESC;
 
 
 

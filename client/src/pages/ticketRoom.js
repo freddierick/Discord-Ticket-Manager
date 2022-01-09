@@ -52,7 +52,7 @@ class Room extends React.Component {
     };
 
     async componentDidMount() {
-        this.ws = new WebSocket(`ws://${WS_API_URL}/ws//ticket/${this.ticketID}?token=${localStorage.getItem('Authentication')}`);
+        this.ws = new WebSocket(`ws://${WS_API_URL}/ws/ticket/${this.ticketID}?token=${localStorage.getItem('Authentication')}`);
 
         this.ws.onopen = () => { 
             console.log("Connected to websocket");
