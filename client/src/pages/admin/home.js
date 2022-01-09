@@ -8,13 +8,16 @@ import { admin, WS_API_URL } from '../../apiManager';
 import Table from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import ApplicationManagement from '../../components/ApplicationManagement';
+
 class Home extends React.Component {
     constructor() {
         super();
         this.state = {
             loading: true,
             tickets: '',
-            redirect: null
+            redirect: null,
+            showApplicationManagementPanel: false
         };
     };
 
@@ -66,8 +69,12 @@ class Home extends React.Component {
 
         return (
             <>
+                <ApplicationManagement show={this.state.showApplicationManagementPanel} />
+
                 <h1>Welcome to TicketMaster Staff Panel</h1>
                 <h2>Open tickets</h2>
+                <Button variant="danger" onClick={() => this.setState({ showApplicationManagementPanel: true})}>Application Manager</Button>
+                
                 {/* Center this table */}
                 {/* <Table className="mx-auto" striped bordered hover> */}
                 <Table className="center-table" responsive>

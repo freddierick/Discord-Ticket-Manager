@@ -11,6 +11,10 @@
 
 const internalEventsManager = async (variables) => {
     const {db, keys, internalEvents, discordClient} = variables;
+    const guild = await discordClient.guilds.fetch(process.env.DISCORD_GUILD);
+    const role = await guild.roles.fetch(process.env.DISCORD_STAFF_ROLES);
+    const staffMap = new Map();
+    const staff = Array.from(role.members).map(member => { staffMap.set(member.id, member) ; return {status: 'offline', ...member} });
 
     internalEvents.on('newMessage', async (data) => {
         const { ticketID, payload, userID, jobID } = data;
@@ -36,6 +40,15 @@ const internalEventsManager = async (variables) => {
 
         internalEvents.emit('dispatchRoomMessage', { ticketID, payload: message });
         internalEvents.emit('newOrderRequest');
+
+        internalEvents.emit('adminNotification', {
+            type: 'info',
+            message: payload.content,
+            title: author.username,
+            ttl: 3000,
+            link: `/ticket/${ticketID}`
+        });
+
     });
 
     internalEvents.on('newOrderRequest', async () => {
@@ -55,6 +68,16 @@ const internalEventsManager = async (variables) => {
         };
         internalEvents.emit('newOrderResponse', arrayForUser);
     });
+    
+
+    internalEvents.on('staffStatusUpdate', (data) => {
+        const { userID, status } = data;
+        staffMap.set(userID, {status, ...staffMap.get(userID)});
+
+        internalEvents.emit('dispatchStaffStatusUpdate', staff);
+        console.log(staffMap);
+    });
+
     
 };
 

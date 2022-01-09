@@ -47,3 +47,28 @@ ON ticket_comments USING gin(comment gin_trgm_ops);
 
 --     PRIMARY KEY (banID),
 -- );
+
+CREATE TABLE IF NOT EXISTS applications (
+    applicationID uuid DEFAULT uuid_generate_v4 (),
+
+    token text NOT NULL,
+    owner text NOT NULL,
+    name text NOT NULL,
+
+    created_at timestamp without time zone DEFAULT now(),
+
+    PRIMARY KEY (applicationID)
+);
+
+CREATE TABLE IF NOT EXISTS application_tools (
+    applicationToolID uuid DEFAULT uuid_generate_v4 (),
+    applicationID uuid ,
+
+    name text NOT NULL,
+    input_type text NOT NULL,
+
+    created_at timestamp without time zone DEFAULT now(),
+
+    PRIMARY KEY (applicationToolID),
+    FOREIGN KEY (applicationID) REFERENCES applications (applicationID) ON DELETE CASCADE
+);

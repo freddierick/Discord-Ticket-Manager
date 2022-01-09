@@ -17,11 +17,23 @@ import UserHome from './pages/user/home';
 
 import AdminHome from './pages/admin/home';
 import AdminTicketRoom from './pages/admin/ticketRoom';
+import AdminNotificationManager from './components/AdminNotificationManager';
 
 import TicketRoom from './pages/ticketRoom';
 
 class SendToLogin extends React.Component {
   componentDidMount() {
+    console.log('Redirecting you to login...');
+    document.location.href = `${API_URL}/authentication/create`;
+  };
+  render() {
+    return <h1>Redirecting you to login...</h1>
+  }
+};
+
+class LogOut extends React.Component {
+  componentDidMount() {
+    localStorage.removeItem('Authentication');
     console.log('Redirecting you to login...');
     document.location.href = `${API_URL}/authentication/create`;
   };
@@ -51,10 +63,11 @@ class App extends React.Component {
     if (isMod) //Render admin pages 
       return (
         <div className="App">
+        <AdminNotificationManager />
           <Router>
             <Routes>
               <Route path="/about" element={<h1>HE</h1>} />
-              <Route path="/users" element={<h1>HE</h1>} />
+              <Route path="/logout" element={<LogOut />} />
               <Route path="/ticket/:uuid" element={<AdminTicketRoom />} />
               <Route path="/*" element={<AdminHome />} />
             </Routes>

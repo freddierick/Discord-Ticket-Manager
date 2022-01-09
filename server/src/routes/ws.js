@@ -52,7 +52,7 @@ const rawRouteWs = async (variables) => {
     });
 
     route.ws('/admin/home', async (ws, req) => {
-        // if (!req.user.isMod) ws.close(4000, 'You are not allowed to access this');
+        if (!req.user.isMod) ws.close(4000, 'You are not allowed to access this');
         console.log('new Connection')
         ws.on('message', async () => {
             console.log("Nre message")
@@ -64,6 +64,30 @@ const rawRouteWs = async (variables) => {
         });
 
     });
+
+    route.ws('/admin/notifications', async (ws, req) => {
+        if (!req.user.isMod) ws.close(4000, 'You are not allowed to access this');
+        console.log('new to notifications')
+
+        internalEvents.emit('staffStatusUpdate', { 
+            userID: req.user.id, 
+            status: 'online' 
+        });
+       
+        internalEvents.on('adminNotification', (data) => {
+            ws.send(JSON.stringify(data));
+        });
+
+        ws.on('close', () => {
+            internalEvents.emit('staffStatusUpdate', { 
+                userID: req.user.id, 
+                status: 'offline' 
+            });
+        });
+
+    });
+
+
     return route;
 };
 

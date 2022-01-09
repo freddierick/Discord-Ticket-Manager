@@ -1,6 +1,7 @@
 // Create a discord oauth2 login express route 
 const route = require('express').Router();
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const checkAuthentication = require('../jwtCheck');
 
@@ -9,12 +10,6 @@ const rawRouteTicket = async (variables) => {
 
     route.use(checkAuthentication(keys.public, true));
     
-    route.get('/:UUID', async (req, res) => {
-        const { UUID } = req.params;
-        const ticket = await db.getTicketByUUID(UUID);
-        if (!ticket.rows[0]) return res.status(404).json({ error: 'Ticket not found' });
-        res.json(ticket.rows[0]);
-    });
 
     route.ws('/:UUID/ws', async (ws, req) => {
         const { UUID } = req.params;
@@ -61,6 +56,40 @@ const rawRouteTicket = async (variables) => {
         res.json();
     });
     
+    route.post('/application', async (req, res) => {
+        const { name } = req.body;
+        if (!name) return res.status(400).json({ error: 'Missing required fields' });
+        crypto.randomBytes(48, async function(err, buffer) {
+            const token = buffer.toString('hex');
+            await db.crateApplication(req.user.id, name, token);
+            res.json({token});
+          });
+    });
+
+    route.get('/application', async (req, res) => {
+        const applications = await db.getAllApplications();
+        res.json(applications.rows);
+    });
+
+    route.put('/application/:uuid', async (req, res) => {
+        const { uuid } = req.params;
+        if (!uuid) return res.status(400).json({ error: 'Missing required fields' });
+
+        crypto.randomBytes(48, async function(err, buffer) {
+            const token = buffer.toString('hex');
+            await db.refreshApplicationToken(uuid, token);
+            res.json({token});
+          });
+    });
+
+    route.delete('/application:uuid', async (req, res) => {
+        const { uuid } = req.params;
+        if (!uuid) return res.status(400).json({ error: 'Missing required fields' });
+        const applicationData = await db.getApplicationByToken(uuid);
+        if (!applicationData.rows[0]) return res.status(404).json({ error: 'Application not found' });
+        await db.deleteApplication(uuid);
+        res.json(applications);
+    });
 
     return route;
 };

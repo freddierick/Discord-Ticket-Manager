@@ -24,6 +24,10 @@ const user = {
 const admin = {
     getTickets: (page = 0) => request(`/admin/tickets/${page}`),
 
+    getApplications: () => request(`/admin/application`),
+    createApplication: (name) => request(`/admin/application`, { method: 'POST', body: JSON.stringify({name: name}) }),
+    refreshApplicationToken: (uuid) => request(`/admin/application/${uuid}`, { method: 'PUT' }),
+    deleteApplication: (uuid) => request(`/admin/application/${uuid}`, { method: 'DELETE' }),
 }
 
 module.exports = {
