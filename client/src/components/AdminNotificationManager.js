@@ -43,7 +43,7 @@ class AdminNotificationManager extends React.Component {
         if (this.state.redirect) 
             return <Navigate to={this.state.redirect} />;
         return (
-            <NotificationContainer />
+            <> </>
         );
     };
 };

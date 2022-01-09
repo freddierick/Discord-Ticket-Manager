@@ -42,6 +42,7 @@ class Room extends React.Component {
     };
 
     sendMessage(message) {
+        document.getElementById('TicketName').value = '';
         this.ws.send(JSON.stringify({
             c: 'SEND_MESSAGE',
             p: {

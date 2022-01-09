@@ -34,7 +34,7 @@ class Home extends React.Component {
         const ticketName = document.getElementById('TicketName').value;
         console.log(ticketName, "TEST", JSON.stringify({title: ticketName}));
         const newTicketData = await user.createTicket(ticketName);
-        this.setState({ redirect: `/ticket/${newTicketData.body.ticketid}` });
+        this.setState({ redirect: `/ticket/${newTicketData.body.UUID}` });
     };
     render() {
         if (this.state.redirect) 

@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { NotificationContainer } from 'react-notifications';
 
 import { API_URL } from './apiManager';
 import jwt from 'jwt-decode';
@@ -48,6 +49,7 @@ class App extends React.Component {
     if (localStorage.getItem('Authentication') == null)
       return (
         <div className="App">
+          <NotificationContainer /> 
           <Router>
             <Routes>
               <Route path="/callback" element={<Callback />} />
@@ -63,6 +65,7 @@ class App extends React.Component {
     if (isMod) //Render admin pages 
       return (
         <div className="App">
+        <NotificationContainer />
         <AdminNotificationManager />
           <Router>
             <Routes>
@@ -77,6 +80,7 @@ class App extends React.Component {
     else //Render user pages 
     return (
       <div className="App">
+        <NotificationContainer />
         <Router>
           <Routes>
             <Route path="/about" element={<h1>HE</h1>} />

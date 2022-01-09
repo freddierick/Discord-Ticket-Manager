@@ -10,7 +10,15 @@ const instigate = async () => {
         port: process.env.PG_PORT || 5432,
     });
 
-    const query = (text, params = []) => pool.query(text, params);
+    const query = async (text, params = []) => {
+        try {
+            const res = await pool.query(text, params);
+            return res;
+        } catch (e) {
+            console.error("DB ERROR", e);
+            return { rows: [] };
+        };
+    }
 
     const sqlTemplate = await fs.readFileSync(__dirname + '/sqlTemplate.sql', 'utf8');
     const createTables = await query(sqlTemplate);

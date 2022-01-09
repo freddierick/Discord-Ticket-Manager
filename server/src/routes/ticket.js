@@ -17,11 +17,13 @@ const rawRouteTicket = async (variables) => {
 
         const userID = req.user.id;
 
+
         const userOpenTickets = await db.getOpenTicketByOwner(req.user.id);
         if (userOpenTickets.rows.length > 0) return res.status(400).json({ error: 'You already have an open ticket' });
 
         const ticket = await db.createNewTicket(userID, title);
-        res.json({UUID: ticket.rows[0], title, userID});
+        res.json({UUID: ticket.rows[0].ticketid, title, userID});
+        internalEvents.emit('newOrderRequest');
     });
 
     route.get('/:UUID', async (req, res) => {

@@ -1,6 +1,11 @@
-const API_URL = 'http://192.168.0.27:3001/api';
-const WS_API_URL = '192.168.0.27:3001/api';
-const BASE_URL = 'http://192.168.0.27:3000';
+// const API_URL = 'http://192.168.0.27:3001/api';
+// const WS_API_URL = '192.168.0.27:3001/api';
+// const BASE_URL = 'http://192.168.0.27:3000';
+
+const API_URL = 'http://api.test.home.freddie.pw/api';
+const WS_API_URL = 'api.test.home.freddie.pw/api';
+const BASE_URL = 'http://app.test.home.freddie.pw';
+
 
 async function request(URI, options = {}) {
     console.log({ headers: {authorization: 'Bearer ' + localStorage.getItem('Authentication'), 'Content-Type': 'application/json' }, ...options})

@@ -12,6 +12,7 @@ const rawRouteAuthentication = require('./routes/authentication');
 const rawRouteTickets = require('./routes/ticket');
 const rawRouteAdmin = require('./routes/admin');
 const rawRouteWs = require('./routes/ws');
+const rawRouteExternalApplication = require('./routes/externalApplication');
 
 const rawInternalEventsManager = require('./internalEventsManager');
 
@@ -71,6 +72,9 @@ const main = async () => {
 
     const routeWs = await rawRouteWs({db, keys, isUserAMod, internalEvents});
     api.use('/ws', routeWs);
+
+    const routeExternalApplication = await rawRouteExternalApplication({db, keys, isUserAMod, internalEvents});
+    api.use('/external', routeExternalApplication);
 
     app.use('/api', api);
 
