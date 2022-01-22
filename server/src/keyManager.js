@@ -23,6 +23,10 @@ const generateKeyPair = () => new Promise((res) => {
 const getOrCreateKeys = async () => {
     const keys = {};
 
+    if (!fs.existsSync(__dirname + '/keyStore')){
+        fs.mkdirSync(__dirname + '/keyStore');
+    }
+
     try {
         console.log('Fetching RSA keys');
         keys.public = await fs.readFileSync(__dirname + '/keyStore/public.pem', 'utf8');
@@ -40,6 +44,7 @@ const getOrCreateKeys = async () => {
         const {publicKey, privateKey} = await generateKeyPair();
         keys.public = publicKey;
         keys.private = privateKey;
+        
         await fs.writeFileSync(__dirname + '/keyStore/public.pem', keys.public);
         await fs.writeFileSync(__dirname + '/keyStore/private.key', keys.private);
     };

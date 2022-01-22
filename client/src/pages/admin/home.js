@@ -8,6 +8,7 @@ import { admin, WS_API_URL } from '../../apiManager';
 import Table from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import AdminTicketsHomeItems from "../../components/AdminTicketsHomeItems.js";
 import ApplicationManagement from '../../components/ApplicationManagement';
 
 class Home extends React.Component {
@@ -75,33 +76,14 @@ class Home extends React.Component {
                 <h2>Open tickets</h2>
                 <Button variant="danger" onClick={() => this.setState({ showApplicationManagementPanel: true})}>Application Manager</Button>
                 
-                {/* Center this table */}
-                {/* <Table className="mx-auto" striped bordered hover> */}
-                <Table className="center-table" responsive>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <td>Owner</td>
-                            <td>#</td>
-                            <td>Open</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.tickets.map((ticket, index) => (
-                            <tr key={index}>
-                                <td>{ticket.id}</td>
-                                <td>{ticket.name}</td>
-                                <img className="profile-picture" src={ticket.owner.displayAvatarURL} alt="Avatar" />
-                                <td>{`${ticket.owner.username}#${ticket.owner.discriminator}`}</td>
-                                <td><Link to={`/ticket/${ticket.id}`}><Button>Open</Button></Link></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-
-
-
+            
+                <h6>Open tickets: {this.state.tickets.length}</h6>
+                <div className="ticketListContainer">
+                    {this.state.tickets.map((ticket, index) => (
+                        <AdminTicketsHomeItems ticket={ticket} index={index}/>
+                    ))}
+                </div>
+                
             </>
         );
 

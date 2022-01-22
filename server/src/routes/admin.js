@@ -29,6 +29,8 @@ const rawRouteTicket = async (variables) => {
 
             arrayForUser.push({
                 id: element.ticketid,
+                state: element.state,
+                name: element.name,
                 owner: owner,
                 name: element.name,
                 created_at: element.created_at,
@@ -38,11 +40,11 @@ const rawRouteTicket = async (variables) => {
         res.json(arrayForUser);
     });
 
-    route.put('/:UUID/:state', async (req, res) => {
+    route.put('/ticket/:UUID/:state', async (req, res) => {
         const { UUID, state } = req.params;
         if (!UUID || !state) return res.status(400).json({ error: 'Missing required fields' });
 
-        const ticket = await db.getTicketByUUID(UUID);
+        const ticket = await db.getTicketById(UUID);
         if (!ticket.rows[0]) return res.status(404).json({ error: 'Ticket not found' });
         // const ticket = await db.closeTicket(UUID);
         

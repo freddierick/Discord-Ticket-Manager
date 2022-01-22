@@ -3,15 +3,10 @@ import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
-import { useParams } from "react-router-dom";
-
 import { admin } from "../apiManager";
 
-function withParams(Component) {
-    return props => <TicketOptions {...props} params={useParams()} />;
-};
 
-class TicketOptions extends React.Component {
+class OnlineStaffPanel extends React.Component {
     constructor(props) {
         super(props);
         this.props = props;
@@ -56,4 +51,4 @@ class TicketOptions extends React.Component {
     };
 };
 
-export default withParams(TicketOptions);
+export default OnlineStaffPanel;

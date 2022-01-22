@@ -58,9 +58,10 @@ const internalEventsManager = async (variables) => {
             const element = tickets.rows[index];
             console.log(element)
             const owner = await discordClient.getOrFetch(element.owner);
-
+            console.log(element)
             arrayForUser.push({
                 id: element.ticketid,
+                state: element.state,
                 owner,
                 name: element.name,
                 created_at: element.created_at,
@@ -78,7 +79,13 @@ const internalEventsManager = async (variables) => {
         console.log(staffMap);
     });
 
-    
+    internalEvents.on('roomStatusUpdate', (data) => {
+        const { userID, status } = data;
+        staffMap.set(userID, {status, ...staffMap.get(userID)});
+
+        internalEvents.emit('dispatchStaffStatusUpdate', staff);
+        console.log(staffMap);
+    });
 };
 
 

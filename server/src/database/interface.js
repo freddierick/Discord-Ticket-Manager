@@ -48,7 +48,7 @@ const instigate = async () => {
 
         updateTicketState: (id, state) => query('UPDATE tickets SET state = $1 WHERE ticketID = $2', [state, id]),
 
-        getOrderedTickets: () => query('SELECT MAX(ticket_comments.created_at) AS newest, tickets.ticketID, tickets.owner, tickets.owner FROM tickets LEFT JOIN ticket_comments ON tickets.ticketID = ticket_comments.ticketID GROUP BY tickets.ticketID ORDER BY newest DESC;', []),
+        getOrderedTickets: () => query('SELECT MAX(ticket_comments.created_at) AS newest, tickets.ticketID, tickets.owner, tickets.state, tickets.name, tickets.created_at FROM tickets LEFT JOIN ticket_comments ON tickets.ticketID = ticket_comments.ticketID GROUP BY tickets.ticketID ORDER BY newest DESC;', []),
     
         crateApplication: (owner, name, token) => query('INSERT INTO applications (owner, name, token) VALUES ($1, $2, $3) RETURNING applicationID', [owner, name, token]),
         refreshApplicationToken: (id, token) => query('UPDATE applications SET token = $1 WHERE applicationID = $2', [token, id]),

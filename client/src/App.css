@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-color: #282c34;
+  color: #ccc;
 }
 
 .App-logo {
@@ -102,3 +104,25 @@
   border-radius: 50%;
 }
 
+.ticketListContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.ticketListItem{
+  width: 90%;
+  max-width: 50rem;
+  margin-top: 10px;
+}
+
+.ticketListItemInner{
+  background-color: #3c424e;
+  border: 1px solid #3c424e;
+}
+.ticketListContainer .ticketListItemInner:hover{
+  background-color: #545c6d;
+  transition: background-color 0.3s ease-in-out;
+}

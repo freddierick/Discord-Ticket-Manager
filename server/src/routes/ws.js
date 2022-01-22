@@ -32,6 +32,7 @@ const rawRouteWs = async (variables) => {
         const { UUID } = req.params;
         const ticket = await db.getTicketById(UUID);
         console.log(req.user.id, ticket.rows[0])
+        if (ticket.rows.length == 0) ws.close(4000, 'You are not allowed to access this ticket');
         if ((ticket.rows[0] && ticket.rows[0].owner != req.user.id) && !req.user.isMod) ws.close(4000, 'You are not allowed to access this ticket');
 
         ws.on('message', async (message) => {
@@ -48,7 +49,6 @@ const rawRouteWs = async (variables) => {
         internalEvents.on('dispatchGlobalMessage', (data) => {
             ws.send(JSON.stringify(data.payload));
         });
-
     });
 
     route.ws('/admin/home', async (ws, req) => {

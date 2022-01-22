@@ -30,8 +30,7 @@ ticketMaster.on('interaction', (interaction) => {
 
 ticketMaster.on('rawWS', (data) => {
     console.log(data);
-});
-
+});+
 
 
 ticketMaster.login('192.168.0.27:3001', '6554b56591ed09147e0b313201aaaaba1f1a3d67adcc26c75a3d52611742fba060ed9336d25c77d9e74dd1effd4a5c1c');

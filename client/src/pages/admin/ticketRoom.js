@@ -1,15 +1,20 @@
 //create new react class component named Message
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 import TicketRoom from "../ticketRoom";
 import Button from 'react-bootstrap/Button';
 import TicketOptions from '../../components/TicketOptions';
 
+function withParams(Component) {
+    return props => <AdminTicketRoom {...props} params={useParams()} />;
+};
+
 class AdminTicketRoom extends React.Component {
     constructor(props) {
         super(props);
         this.props = props;
+        console.log(this.props, "props");
         this.state = {
             redirect: null,
             showOptions: false
@@ -38,10 +43,10 @@ class AdminTicketRoom extends React.Component {
                 <TicketOptions show={this.state.showOptions} />
                 <Button variant="danger" onClick={() => this.goHome()}>Back</Button>
                 <Button variant="danger" onClick={() => this.openOptionsModal()}>showOptions</Button>
-                <TicketRoom />
+                <TicketRoom {...this.props} />
             </>
         )
     };
 };
 
-export default AdminTicketRoom;
+export default withParams(AdminTicketRoom);
