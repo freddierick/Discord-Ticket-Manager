@@ -26,7 +26,10 @@ class AdminNotificationManager extends React.Component {
         this.ws.onmessage = (data) => {
             const message = JSON.parse(data.data);
             let functionClick = () => {};
-            if (message.link) functionClick = () => { this.setState({ redirect: message.link }) };
+            if (message.link) functionClick = () => { 
+                // this.setState({ redirect: message.link })
+                document.location.href = message.link;
+             };
             NotificationManager[message.type](message.message, message.title, message.ttl, functionClick);
         };
 

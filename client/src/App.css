@@ -90,10 +90,26 @@
   color: #999;
 }
 
-.messages {
+
+.messagesContainerInner {
   overflow-y: scroll;
-  height: 400px;
+  height: 20rem;
   width: 100%;
+}
+
+/* Center */
+.messageSendInput {
+  margin-top: 10px;
+  position: relative;
+  width: 98%;
+  left: 1%;
+}
+
+.messageSendInputMobile {
+  margin-top: 10px;
+  position: relative;
+  width: 98%;
+  left: 1%;
 }
 
 .profile-picture {
@@ -133,6 +149,9 @@
   background-color: #545c6d;
   transition: background-color 0.3s ease-in-out;
 }
+.boarderRed{
+  border: 3px solid #ff0000;
+}
 
 .onlineStaffButton{
   top: 0%;
@@ -145,3 +164,4 @@
 .onlineStaffItemInner{
 
 }
+

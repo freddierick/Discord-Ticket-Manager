@@ -22,7 +22,7 @@ class Message extends React.Component {
         return (
         <>
             <Card className="ticketListItem">
-                <Card.Body className="ticketListItemInner">
+                <Card.Body className={`ticketListItemInner ${this.state.props.ticket.state === "closed" ? 'boarderRed' : ''}`}>
                     <Card.Title>{this.state.props.ticket.owner.tag}</Card.Title>
                     
                     <Card.Subtitle> <img className="profile-picture" src={this.state.props.ticket.owner.displayAvatarURL} alt="Avatar" /> </Card.Subtitle>

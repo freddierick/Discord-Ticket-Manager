@@ -1,6 +1,7 @@
 import React from "react";
 import { v4 } from "uuid";
 import jwt from 'jwt-decode';
+import { BrowserView, MobileView } from 'react-device-detect';
 
 import {
     Navigate,
@@ -37,12 +38,14 @@ class Room extends React.Component {
         };
         this.ws = null;
 
+        this.keyTracker = new Map();
+
         this.userData = jwt(localStorage.getItem('Authentication'));
 
     };
 
     sendMessage(message) {
-        document.getElementById('TicketName').value = '';
+        document.getElementById('CommentInput').value = '';
         this.ws.send(JSON.stringify({
             c: 'SEND_MESSAGE',
             p: {
@@ -66,7 +69,7 @@ class Room extends React.Component {
             this.state.messageMap.set(message.uuid, message);
             this.state.messages.push(message);
             this.setState({ messages: this.state.messages });
-            document.getElementsByClassName('messages')[0].scrollTop = document.getElementsByClassName('messages')[0].scrollHeight;
+            document.getElementsByClassName('messagesContainerInner')[0].scrollTop = document.getElementsByClassName('messagesContainerInner')[0].scrollHeight;
         };
 
 
@@ -88,7 +91,24 @@ class Room extends React.Component {
         this.setState({ loading: false, ticket: ticketMetaData.body,  });
         //scroll to the bottom of the messages class 
 
-        document.getElementsByClassName('messages')[0].scrollTop = document.getElementsByClassName('messages')[0].scrollHeight;
+        
+
+        document.onkeydown = (e) => {
+            this.keyTracker.set(e.key, true);
+            const message = document.getElementById('CommentInput').value;
+            if (e.key === "Enter" && this.keyTracker.get('Shift')) {
+                document.getElementById('CommentInput').value = message + '\n';
+            } else if (e.key === "Enter" && !this.keyTracker.get('Shift')) {
+                this.sendMessage(message);
+            };
+            console.log(document.getElementById('CommentInput').value)
+            console.log(this.keyTracker)
+        };
+        document.onkeyup = (e) => {
+            this.keyTracker.set(e.key, false);
+        };
+
+        document.getElementsByClassName('messagesContainerInner')[0].scrollTop = document.getElementsByClassName('messagesContainerInner')[0].scrollHeight;
     };
 
 
@@ -108,25 +128,36 @@ class Room extends React.Component {
                 <h1>Welcome to TicketMaster</h1>
                 <h2>Ticket: {this.state.ticket.name}</h2>
 
-                <section className="messages">
-                    {this.state.messages.map((message, index) => ( <Message ownMessage={this.userData.id === message.author.id} message={message}/> ))}
+                <section className="messagesContainer">
+                    <section className="messagesContainerInner">
+                        {this.state.messages.map((message, index) => ( <Message ownMessage={this.userData.id === message.author.id} message={message}/> ))}
+                    </section>
                 </section>
+                <BrowserView>
+                    <div className="messageSendInput">
+                        <Form.Control
+                            type="text"
+                            id="CommentInput"
+                            aria-describedby="TicketNameBlock"
+                            placeholder={`Message #${this.state.ticket.name}`}
+                        />
+                    </div>
+                </BrowserView>
+                <MobileView>
+                <div className="messageSendInputMobile">
+                        <Form.Control
+                            type="text"
+                            id="CommentInput"
+                            aria-describedby="TicketNameBlock"
+                            placeholder={`Message #${this.state.ticket.name}`}
+                        />
+                        <Button>Send</Button>
+                    </div>
+                </MobileView>
+                
+                <br />
 
-                <br />
-                <br />
-                <br />
-
-                <Form.Label htmlFor="TicketName">MSG</Form.Label>
-                <Form.Control
-                    type="text"
-                    id="TicketName"
-                    aria-describedby="TicketNameBlock"
-                />
-                <Form.Text value={this.state.ticketName} id="TicketNameBlock" muted>
-                    Msg:
-                </Form.Text>
-                <br />
-                <Button onClick={() => {this.sendMessage(document.getElementById('TicketName').value)}} variant="primary">Send!</Button>
+    
             </>
         );
 

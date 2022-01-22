@@ -17,7 +17,7 @@ class AdminTicketRoom extends React.Component {
         console.log(this.props, "props");
         this.state = {
             redirect: null,
-            showOptions: false
+            showOptions: document.location.href.includes("manage")
         };
 
         this.openOptionsModal = this.openOptionsModal.bind(this);

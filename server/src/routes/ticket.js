@@ -29,7 +29,7 @@ const rawRouteTicket = async (variables) => {
     route.get('/:UUID', async (req, res) => {
         const { UUID } = req.params;
         const ticket = await db.getTicketById(UUID);
-        if (!ticket.rows[0] || (ticket.rows[0].owner != req.user.id || req.user.isMod)) return res.status(404).json({ error: 'Ticket not found' });
+        if (!ticket.rows[0] || (ticket.rows[0].owner != req.user.id && !req.user.isMod)) return res.status(404).json({ error: 'Ticket not found' });
         res.json(ticket.rows[0]);
     });
 
