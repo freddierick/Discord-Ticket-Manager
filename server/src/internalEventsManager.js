@@ -14,8 +14,14 @@ const internalEventsManager = async (variables) => {
     const guild = await discordClient.guilds.fetch(process.env.DISCORD_GUILD);
     const role = await guild.roles.fetch(process.env.DISCORD_STAFF_ROLES);
     const staffMap = new Map();
-    const staff = Array.from(role.members).map(member => { staffMap.set(member.id, member) ; return {status: 'offline', ...member} });
+    await new Promise((res) => discordClient.on('ready', res))
+    const staff = [];
+    Array.from(role.members).map((member, index) => { 
+        staff.push({ status: 'offline', ...member[1] });
+        staffMap.set(member[1].id, staff[index]);
+    });
 
+    console.log(staffMap)
     internalEvents.on('newMessage', async (data) => {
         const { ticketID, payload, userID, jobID } = data;
         // Does payload have content?
@@ -71,11 +77,15 @@ const internalEventsManager = async (variables) => {
     });
     
 
+    internalEvents.on('getStaffStatus', () => {
+        internalEvents.emit('dispatchStaffStatusUpdate', Array.from(staffMap.values()));
+    });
+
     internalEvents.on('staffStatusUpdate', (data) => {
         const { userID, status } = data;
-        staffMap.set(userID, {status, ...staffMap.get(userID)});
-
-        internalEvents.emit('dispatchStaffStatusUpdate', staff);
+        staffMap.set(userID, {...staffMap.get(userID), status});
+        console.log(`STAFF STATUS UPDATE: ${userID} ${status}`);
+        internalEvents.emit('dispatchStaffStatusUpdate', Array.from(staffMap.values()));
         console.log(staffMap);
     });
 
@@ -83,7 +93,7 @@ const internalEventsManager = async (variables) => {
         const { userID, status } = data;
         staffMap.set(userID, {status, ...staffMap.get(userID)});
 
-        internalEvents.emit('dispatchStaffStatusUpdate', staff);
+        // internalEvents.emit('dispatchStaffStatusUpdate', staff);
         console.log(staffMap);
     });
 };

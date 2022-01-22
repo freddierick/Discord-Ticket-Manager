@@ -20,6 +20,8 @@ import AdminHome from './pages/admin/home';
 import AdminTicketRoom from './pages/admin/ticketRoom';
 import AdminNotificationManager from './components/AdminNotificationManager';
 
+import OnlineStaffPanel from './components/OnlineStaffPanel';
+
 import TicketRoom from './pages/ticketRoom';
 
 class SendToLogin extends React.Component {
@@ -67,6 +69,7 @@ class App extends React.Component {
         <div className="App">
         <NotificationContainer />
         <AdminNotificationManager />
+        <OnlineStaffPanel />
           <Router>
             <Routes>
               <Route path="/about" element={<h1>HE</h1>} />

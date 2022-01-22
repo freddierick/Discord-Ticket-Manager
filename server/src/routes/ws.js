@@ -20,6 +20,17 @@ const rawRouteWs = async (variables) => {
         next();
     });
     
+    route.ws('/user/status', async (ws, req) => {
+
+        ws.on('message', async () => {
+            internalEvents.emit('getStaffStatus');
+        });
+
+        internalEvents.on('dispatchStaffStatusUpdate', (data) => {
+            ws.send(JSON.stringify(data));
+        });
+    });
+
     route.ws('/ticket/:UUID', async (ws, req) => {
         console.log('WS request')
         ws.on('upgrade', (req, socket) => {

@@ -103,6 +103,13 @@
   margin-right: 20px;
   border-radius: 50%;
 }
+.profile-picture-small {
+  float: left;
+  max-width: 40px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
 
 .ticketListContainer{
   display: flex;
@@ -125,4 +132,16 @@
 .ticketListContainer .ticketListItemInner:hover{
   background-color: #545c6d;
   transition: background-color 0.3s ease-in-out;
+}
+
+.onlineStaffButton{
+  top: 0%;
+  right: 0%;
+  position: fixed;
+}
+.onlineStaffItem{
+  margin-top: 1px;
+}
+.onlineStaffItemInner{
+
 }
