@@ -153,7 +153,7 @@ class Room extends React.Component {
                 <h2>Ticket: {this.state.ticket.name}</h2>
 
                 <div className="chat-container">
-					<div className="chat-messages p-4">
+					<div className="chat-messages p-4 messagesContainerInner">
                         {messages.map((message, index) => 
                             // Displays message or a break for day
                             message.breakForDay ? 
@@ -176,13 +176,16 @@ class Room extends React.Component {
                     </BrowserView>
                     <MobileView>
                     <div className="messageSendInputMobile">
-                            <Form.Control
-                                type="text"
-                                id="CommentInput"
-                                aria-describedby="TicketNameBlock"
-                                placeholder={`Message #${this.state.ticket.name}`}
-                            />
-                            <Button onClick={() => this.sendMessage(document.getElementById('CommentInput').value)}>Send</Button>
+                    <div class="input-group">
+                        <Form.Control
+                                    type="text"
+                                    id="CommentInput"
+                                    aria-describedby="TicketNameBlock"
+                                    placeholder={`Message #${this.state.ticket.name}`}
+                                />
+                        <Button onClick={() => this.sendMessage(document.getElementById('CommentInput').value)}>Send</Button>
+                    </div>
+                            
                         </div>
                     </MobileView>
                     
