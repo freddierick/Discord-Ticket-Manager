@@ -87,6 +87,7 @@ class App extends React.Component {
         <NotificationContainer />
         <Router>
           <Routes>
+            <Route path="/logout" element={<LogOut />} />
             <Route path="/about" element={<h1>HE</h1>} />
             <Route path="/ticket/:uuid" element={<TicketRoom />} />
             <Route path="/ticket/:uuid/:messageUuid" element={<AdminTicketRoom />} />

@@ -192,6 +192,17 @@
 .chat-offline {
     color: #e4606d
 }
+.chat-container{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  max-width: 50rem;
+  background-color: #3b414d;
+  border: gray solid 3px;
+  height: 45rem;
+  margin-bottom: 1rem;
+}
 
 .chat-messages {
     display: flex;
@@ -240,16 +251,7 @@
 .border-top {
     border-top: 1px solid #dee2e6!important;
 }
-.chat-container{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 40%;
-  background-color: #3b414d;
-  border: gray solid 3px;
-  height: 45rem;
-  margin-bottom: 1rem;
-}
+
 
 
 

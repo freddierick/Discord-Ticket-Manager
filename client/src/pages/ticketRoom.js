@@ -182,7 +182,7 @@ class Room extends React.Component {
                                 aria-describedby="TicketNameBlock"
                                 placeholder={`Message #${this.state.ticket.name}`}
                             />
-                            <Button>Send</Button>
+                            <Button onClick={() => this.sendMessage(document.getElementById('CommentInput').value)}>Send</Button>
                         </div>
                     </MobileView>
                     
