@@ -37,7 +37,12 @@ class Room extends React.Component {
             messageMap: new Map(),
 
             ticket: {},
+
+            messagePageRequested: 0,
+            loadingMoreMessages: false,
+            messagePageNoMoreFound: false,
         };
+
         this.ws = null;
 
         this.keyTracker = new Map();
@@ -131,6 +136,29 @@ class Room extends React.Component {
         };
 
         document.getElementsByClassName('messagesContainerInner')[0].scrollTop = document.getElementsByClassName('messagesContainerInner')[0].scrollHeight;
+
+        const externalThis = this;
+
+        document.getElementsByClassName('messagesContainerInner')[0].addEventListener('scroll', async function(e) {
+            if (e.target.scrollTop === 0 && externalThis.state.messagePageNoMoreFound === false && externalThis.state.loadingMoreMessages === false) {
+                externalThis.setState({ loadingMoreMessages: true });
+                const anchorMessage = externalThis.state.messages[0];
+
+                const moreTicketPastMessageData = await user.getTicketMessages(externalThis.ticketID, externalThis.state.messagePageRequested + 1);
+
+                if (moreTicketPastMessageData.body.length > 0) {
+
+                    moreTicketPastMessageData.body.forEach(message => {
+                        externalThis.state.messageMap.set(message.uuid, message);
+                    });
+            
+                    externalThis.setState({ messagePageRequested: externalThis.state.messagePageRequested + 1, loadingMoreMessages: false,  messages: [...moreTicketPastMessageData.body.reverse(), ...externalThis.state.messages]});
+                    document.getElementById(`message-${anchorMessage.id}`).scrollIntoView();
+                } else {
+                    externalThis.setState({ messagePageNoMoreFound: true, loadingMoreMessages: false });
+                };
+            };
+          });
     };
 
 
@@ -154,6 +182,7 @@ class Room extends React.Component {
 
                 <div className="chat-container">
 					<div className="chat-messages p-4 messagesContainerInner">
+                        { this.state.loadingMoreMessages ? <div className="lds-facebook" /> : <div /> }
                         {messages.map((message, index) => 
                             // Displays message or a break for day
                             message.breakForDay ? 

@@ -64,7 +64,7 @@ class Message extends React.Component {
     render() {
         if (this.props.ownMessage)
             return (
-                <div className="chat-message-right pb-4">
+                <div className="chat-message-right pb-4" id={`message-${this.props.message.id}`}>
                     <div>
                         <img src={this.props.message.author.displayAvatarURL} className="rounded-circle mr-1" alt={this.props.message.author.username + ' avatar'} width="40" height="40" />
                         <div className="text-muted small text-nowrap mt-2">{this.textTimestamp(this.timestamp)}</div>
@@ -90,7 +90,7 @@ class Message extends React.Component {
             );
         else
             return (
-                <div className="chat-message-left pb-4">
+                <div className="chat-message-left pb-4" id={`message-${this.props.message.id}`}>
                     <div>
                         <img src={this.props.message.author.displayAvatarURL} className="rounded-circle mr-1" alt={this.props.message.author.username + ' avatar'} width="40" height="40" />
                         <div className="text-muted small text-nowrap mt-2">{this.textTimestamp(this.timestamp)}</div>
