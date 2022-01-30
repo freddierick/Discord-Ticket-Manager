@@ -24,7 +24,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
 app.use(express.json());
+
+app.use(express.static('../client/build'));
 
 const main = async () => {
     const internalEvents = new Events();

@@ -2,6 +2,7 @@ import React from "react";
 import { v4 } from "uuid";
 import jwt from 'jwt-decode';
 import { BrowserView, MobileView } from 'react-device-detect';
+import cloneDeep from 'lodash/cloneDeep';
 
 import {
     Navigate,
@@ -14,6 +15,7 @@ import { admin, user, API_URL, WS_API_URL } from '../apiManager';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Message from '../components/Message';
+import BreakForDay from '../components/BreakForDay';
 
 
 function withParams(Component) {
@@ -53,6 +55,26 @@ class Room extends React.Component {
             },
             j: v4()
         }));
+    };
+
+    //A function that calculates where breaks should be placed in the messages
+    insertDayBreaks(messages) {
+        const newMessages = [];
+        let lastDay = null;
+        for (let index = 0; index < messages.length; index++) {
+            const message = messages[index];
+            const timestamp = new Date(message.timestamp);
+            const day = timestamp.getDate();
+            if (lastDay !== day) {
+                newMessages.push({
+                    breakForDay: true,
+                    timestamp: timestamp,
+                });
+            }
+            newMessages.push(message);
+            lastDay = day;
+        };
+        return newMessages;
     };
 
     async componentDidMount() {
@@ -123,41 +145,50 @@ class Room extends React.Component {
                 </>
             );
 
+        const messages = this.insertDayBreaks(this.state.messages);
+
         return (
             <>
                 <h1>Welcome to TicketMaster</h1>
                 <h2>Ticket: {this.state.ticket.name}</h2>
 
-                <section className="messagesContainer">
-                    <section className="messagesContainerInner">
-                        {this.state.messages.map((message, index) => ( <Message ownMessage={this.userData.id === message.author.id} message={message}/> ))}
-                    </section>
-                </section>
-                <BrowserView>
-                    <div className="messageSendInput">
-                        <Form.Control
-                            type="text"
-                            id="CommentInput"
-                            aria-describedby="TicketNameBlock"
-                            placeholder={`Message #${this.state.ticket.name}`}
-                        />
+                <div className="chat-container">
+					<div className="chat-messages p-4">
+                        {messages.map((message, index) => 
+                            // Displays message or a break for day
+                            message.breakForDay ? 
+                                <BreakForDay timestamp={message.timestamp}/>
+                            : 
+                                <Message ownMessage={this.userData.id === message.author.id} message={message} ticket={this.state.ticket}/> 
+                            )
+                        }
                     </div>
-                </BrowserView>
-                <MobileView>
-                <div className="messageSendInputMobile">
-                        <Form.Control
-                            type="text"
-                            id="CommentInput"
-                            aria-describedby="TicketNameBlock"
-                            placeholder={`Message #${this.state.ticket.name}`}
-                        />
-                        <Button>Send</Button>
-                    </div>
-                </MobileView>
-                
-                <br />
 
-    
+                    <BrowserView>
+                        <div className="messageSendInput">
+                            <Form.Control
+                                type="text"
+                                id="CommentInput"
+                                aria-describedby="TicketNameBlock"
+                                placeholder={`Message #${this.state.ticket.name}`}
+                            />
+                        </div>
+                    </BrowserView>
+                    <MobileView>
+                    <div className="messageSendInputMobile">
+                            <Form.Control
+                                type="text"
+                                id="CommentInput"
+                                aria-describedby="TicketNameBlock"
+                                placeholder={`Message #${this.state.ticket.name}`}
+                            />
+                            <Button>Send</Button>
+                        </div>
+                    </MobileView>
+                    
+                    <br />
+
+                    </div>
             </>
         );
 

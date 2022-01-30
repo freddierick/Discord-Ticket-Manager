@@ -52,7 +52,7 @@ const rawRouteTicket = async (variables) => {
             const author = await discordClient.getOrFetch(element.author);
 
             arrayForUser.push({
-                id: element.ticketID,
+                id: element.ticketid,
                 content: element.comment,
                 timestamp: element.created_at,
                 author,

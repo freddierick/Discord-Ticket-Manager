@@ -75,6 +75,7 @@ class App extends React.Component {
               <Route path="/about" element={<h1>HE</h1>} />
               <Route path="/logout" element={<LogOut />} />
               <Route path="/ticket/:uuid" element={<AdminTicketRoom />} />
+              <Route path="/ticket/:uuid/:messageUuid" element={<AdminTicketRoom />} />
               <Route path="/*" element={<AdminHome />} />
             </Routes>
           </Router>
@@ -88,6 +89,7 @@ class App extends React.Component {
           <Routes>
             <Route path="/about" element={<h1>HE</h1>} />
             <Route path="/ticket/:uuid" element={<TicketRoom />} />
+            <Route path="/ticket/:uuid/:messageUuid" element={<AdminTicketRoom />} />
             <Route path="/*" element={<UserHome />} />
           </Routes>
         </Router>

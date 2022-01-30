@@ -37,7 +37,7 @@ const admin = {
     updateTicketState: (uuid, state) => request(`/admin/ticket/${uuid}/${state}`, { method: 'PUT' }),
 }
 
-module.exports = {
+export {
     API_URL,
     BASE_URL,
     WS_API_URL,

@@ -16,7 +16,7 @@ const rawRouteTicket = async (variables) => {
 
     });
 
-    route.get('/tickets/:page', async (req, res) => {
+    route.get('/tickets/:page', async (req, res) => { 
         const { page } = req.params;
         if (!page) return res.status(400).json({ error: 'Missing required fields' });
         
